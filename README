@@ -1,0 +1,11 @@
+Patterns used: 
+Classes for obvious reasons and therefore constructors
+The cards have states
+
+Postmortem:
+I would add a "in pile" state to the cards.
+Maybe write my own grabber class because having to pass in the piles and card tables feels wrong.
+Also didn't manage to fix the weird issue of the card sometimes being drawn on top of another even though it's order is correct.
+
+
+Sprites were drawn by me using Krita, all assets were made by me.
