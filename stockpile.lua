@@ -37,19 +37,10 @@ function StockPile:addCard(card)
 end
 
 function StockPile:drawThree()
-    card1 = table.remove(self.stockTable, 1)
-    card2 = table.remove(self.stockTable, 1)
-    card3 = table.remove(self.stockTable, 1)
-
-    table.insert(self.wasteTable, card1)
-    table.insert(self.wasteTable, card2)
-    table.insert(self.wasteTable, card3)
-
-    card1.faceUp = true
-    card2.faceUp = true
-    card3.faceUp = true
-
-    card1.moveCard(self.wastePilePosition.x, self.wastePilePosition.y)
-    card2.moveCard(self.wastePilePosition, self.wastePilePosition.y)
-    card3.moveCard(self.wastePilePosition, self.wastePilePosition.y)
+    for i = 0, 2, 1 do
+        card = table.remove(self.stockTable, 1)
+        table.insert(self.wasteTable, card)
+        card:moveCard(self.wastePilePosition.x, self.wastePilePosition.y * (i*20))
+        card.faceUp = true
+    end 
 end
