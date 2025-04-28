@@ -5,6 +5,7 @@ io.stdout:setvbuf("no")
 
 require("card")
 require("grabber")
+require("stockpile")
 require("cardpile")
 
 cardPool = {
@@ -73,10 +74,9 @@ function love.load()
   grabber = GrabberClass:new()
   cardTable = {}
   cardPileTable = {}
+  stockPile = StockPile:new(50, 50)
 
-
-  -- i have...not nice things i would like to say about lua indexing and loops
-  -- for (int i = 0; i < 7; i++)
+  -- table cards
   for i = 0, 6, 1 do
     table.insert(cardPileTable, CardPile:new (200 + (i*75), 50, false, false))
   end
@@ -102,16 +102,12 @@ function love.load()
     end
   end
 
-  -- non draw pile stack
-  table.insert(cardPileTable, CardPile:new(50, 150, false, true))
-  -- draw pile and stack
-  table.insert(cardPileTable, CardPile:new(50, 50, true, true))
 
   -- add rest of cards to draw pile
   while #cardPool > 0 do
-    local tmp = math.random(1, #cardPool)
-    cardPileTable[#cardPileTable]:addCard(cardPool[tmp])
-    table.remove(cardPool, tmp)
+    local randIndex = math.random(1, #cardPool)
+    stockPile:addCard(cardPool[randIndex])
+    table.remove(cardPool, randIndex)
   end
 
   -- finished piles
@@ -136,6 +132,9 @@ function love.update()
 end
 
 function love.draw()
+
+  stockPile:draw()
+
   for _, cardPile in ipairs(cardPileTable) do
     cardPile:draw()
   end
