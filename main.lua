@@ -118,7 +118,7 @@ function love.load()
 end
 
 function love.update()
-  grabber:update(cardTable, cardPileTable)
+  grabber:update()
 
   checkForMouseMoving()
 
@@ -156,7 +156,6 @@ function checkForMouseMoving()
       card:checkForMouseOver(grabber)
     end
   end
-
 
   for _, card in ipairs(cardTable) do
     card:checkForMouseOver(grabber)

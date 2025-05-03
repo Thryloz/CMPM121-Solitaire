@@ -3,18 +3,18 @@ require "vector"
 StockPile = {}
 
 function StockPile:new(xPos, yPos)
-    local drawPile = {}
-    setmetatable(drawPile, {__index = StockPile})
+    local stockPile = {}
+    setmetatable(stockPile, {__index = StockPile})
 
-    drawPile.stockPilePosition = Vector(xPos, yPos)
-    drawPile.wastePilePosition = Vector(xPos, yPos + 100)
-    drawPile.size = Vector(50, 70)
-    drawPile.interactSize = Vector(55, 75)
+    stockPile.stockPilePosition = Vector(xPos, yPos)
+    stockPile.wastePilePosition = Vector(xPos, yPos + 100)
+    stockPile.size = Vector(50, 70)
+    stockPile.interactSize = Vector(55, 75)
 
-    drawPile.stockTable = {}
-    drawPile.wasteTable = {}
+    stockPile.stockTable = {}
+    stockPile.wasteTable = {}
     
-    return drawPile
+    return stockPile
 end
 
 function StockPile:draw()

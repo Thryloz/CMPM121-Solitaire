@@ -30,7 +30,7 @@ function GrabberClass:update()
     love.mouse.getY()
   )
 
-  -- grabbing card in pile
+  -- Grab card
   if love.mouse.isDown(1) and self.grabPos == nil then
     self:grab()
   end
@@ -49,14 +49,35 @@ end
 
 function GrabberClass:grab()
   self.grabPos = self.currentMousePos
-  self.heldObject = card
-  self.offset = card.position - self.grabPos
-  self.heldObject.state = 2 -- object (card) is grabbed
+  print("grabbing card")
+
+  for _, cardPile in ipairs(cardPileTable) do
+    print("checking cardpile:" ..tostring(cardPile))
+    for i, card in ipairs(cardPile.cardTable) do
+      print(card.state)
+      if card.state == 1 and card.faceUp then
+        print("grabbing card")
+        table.insert(cardTable, card)
+        cardPile:removeCard(card)
+        self.heldObject = card
+        self.offset = card.position - self.grabPos
+        self.heldObject.state = 2 -- object (card) is grabbed
+      end
+    end
+  end
 end
 
 function GrabberClass:release()
   -- NEW: some more logic stubs here
   if self.heldObject == nil then -- we have nothing to release
+      self.offset = nil
+      self.grabPos = nil
     return
-  end  
+  end
+
+
+  self.heldObject.state = nil
+  self.heldObject = nil
+  self.offset = nil
+  self.grabPos = nil
 end

@@ -22,19 +22,17 @@ function CardClass:new(xPos, yPos, value, suite, faceUp)
   if (suite == "clubs") then
     card.color = {0, 0, 0, 1}
     card.suite = love.graphics.newImage("Sprites/clubs.png")
-  else if (suite == "spades") then
+  elseif (suite == "spades") then
     card.color = {0, 0, 0, 1}
     card.suite = love.graphics.newImage("Sprites/spades.png")
-  else if (suite == "hearts") then
+  elseif (suite == "hearts") then
     card.color = {1, 0, 0, 1}
     card.suite = love.graphics.newImage("Sprites/hearts.png")
-  else if (suite == "diamonds") then
+  elseif (suite == "diamonds") then
     card.color = {1, 0, 0, 1}
     card.suite = love.graphics.newImage("Sprites/diamonds.png")
   end
-  end
-  end
-  end
+
 
   card.faceUp = faceUp
 
