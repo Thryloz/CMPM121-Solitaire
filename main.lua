@@ -9,7 +9,7 @@ require("stockpile")
 require("cardpile")
 
 cardPool = {
-  CardClass:new(100, 100, "A", "clubs", false),
+  CardClass:new(100, 100, 1, "clubs", false),
   CardClass:new(100, 100, 2, "clubs", false),
   CardClass:new(100, 100, 3, "clubs", false),
   CardClass:new(100, 100, 4, "clubs", false),
@@ -19,10 +19,10 @@ cardPool = {
   CardClass:new(100, 100, 8, "clubs", false),
   CardClass:new(100, 100, 9, "clubs", false),
   CardClass:new(100, 100, 10, "clubs", false),
-  CardClass:new(100, 100, "J", "clubs", false),
-  CardClass:new(100, 100, "Q", "clubs", false),
-  CardClass:new(100, 100, "K", "clubs", false),
-  CardClass:new(100, 100, "A", "spades", false),
+  CardClass:new(100, 100, 11, "clubs", false),
+  CardClass:new(100, 100, 12, "clubs", false),
+  CardClass:new(100, 100, 13, "clubs", false),
+  CardClass:new(100, 100, 1, "spades", false),
   CardClass:new(100, 100, 2, "spades", false),
   CardClass:new(100, 100, 3, "spades", false),
   CardClass:new(100, 100, 4, "spades", false),
@@ -32,10 +32,10 @@ cardPool = {
   CardClass:new(100, 100, 8, "spades", false),
   CardClass:new(100, 100, 9, "spades", false),
   CardClass:new(100, 100, 10, "spades", false),
-  CardClass:new(100, 100, "J", "spades", false),
-  CardClass:new(100, 100, "Q", "spades", false),
-  CardClass:new(100, 100, "K", "spades", false),
-  CardClass:new(100, 100, "A", "hearts", false),
+  CardClass:new(100, 100, 11, "spades", false),
+  CardClass:new(100, 100, 12, "spades", false),
+  CardClass:new(100, 100, 13, "spades", false),
+  CardClass:new(100, 100, 1, "hearts", false),
   CardClass:new(100, 100, 2, "hearts", false),
   CardClass:new(100, 100, 3, "hearts", false),
   CardClass:new(100, 100, 4, "hearts", false),
@@ -45,10 +45,10 @@ cardPool = {
   CardClass:new(100, 100, 8, "hearts", false),
   CardClass:new(100, 100, 9, "hearts", false),
   CardClass:new(100, 100, 10, "hearts", false),
-  CardClass:new(100, 100, "J", "hearts", false),
-  CardClass:new(100, 100, "Q", "hearts", false),
-  CardClass:new(100, 100, "K", "hearts", false),
-  CardClass:new(100, 100, "A", "diamonds", false),
+  CardClass:new(100, 100, 11, "hearts", false),
+  CardClass:new(100, 100, 12, "hearts", false),
+  CardClass:new(100, 100, 13, "hearts", false),
+  CardClass:new(100, 100, 1, "diamonds", false),
   CardClass:new(100, 100, 2, "diamonds", false),
   CardClass:new(100, 100, 3, "diamonds", false),
   CardClass:new(100, 100, 4, "diamonds", false),
@@ -58,9 +58,9 @@ cardPool = {
   CardClass:new(100, 100, 8, "diamonds", false),
   CardClass:new(100, 100, 9, "diamonds", false),
   CardClass:new(100, 100, 10, "diamonds", false),
-  CardClass:new(100, 100, "J", "diamonds", false),
-  CardClass:new(100, 100, "Q", "diamonds", false),
-  CardClass:new(100, 100, "K", "diamonds", false),
+  CardClass:new(100, 100, 11, "diamonds", false),
+  CardClass:new(100, 100, 12, "diamonds", false),
+  CardClass:new(100, 100, 13, "diamonds", false),
 }
 
 
@@ -78,7 +78,7 @@ function love.load()
 
   -- table cards
   for i = 0, 6, 1 do
-    table.insert(cardPileTable, CardPile:new (200 + (i*75), 50, false, false))
+    table.insert(cardPileTable, CardPile:new (200 + (i*75), 50, false))
   end
 
   -- in play cards
@@ -111,10 +111,10 @@ function love.load()
   end
 
   -- finished piles
-  table.insert(cardPileTable, CardPile:new(800, 50, false, true))
-  table.insert(cardPileTable, CardPile:new(800, 150, false, true))
-  table.insert(cardPileTable, CardPile:new(800, 250, false, true))
-  table.insert(cardPileTable, CardPile:new(800, 350, false, true))
+  table.insert(cardPileTable, CardPile:new(800, 50, true))
+  table.insert(cardPileTable, CardPile:new(800, 150, true))
+  table.insert(cardPileTable, CardPile:new(800, 250, true))
+  table.insert(cardPileTable, CardPile:new(800, 350, true))
 end
 
 function love.update()

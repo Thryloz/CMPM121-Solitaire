@@ -62,7 +62,19 @@ function CardClass:draw()
  
     -- number and suite
     love.graphics.setColor(self.color)
-    love.graphics.print(tostring(tostring(self.value)), self.position.x + 5, self.position.y + 5)
+    if self.value == 1 then
+      love.graphics.print(tostring("A"), self.position.x + 5, self.position.y + 5)
+    elseif self.value == 11 then
+      love.graphics.print(tostring("J"), self.position.x + 5, self.position.y + 5)
+    elseif self.value == 12 then
+      love.graphics.print(tostring("Q"), self.position.x + 5, self.position.y + 5) 
+    elseif self.value == 13 then
+      love.graphics.print(tostring("K"), self.position.x + 5, self.position.y + 5)
+    else
+      love.graphics.print(tostring(tostring(self.value)), self.position.x + 5, self.position.y + 5)
+    end
+
+    -- drawing the 10 edge case
     if self.value ~= 10 then
       love.graphics.draw(self.suite, self.position.x + 12.5, self.position.y + 6, 0, 0.1, 0.1)
     else
@@ -78,11 +90,6 @@ function CardClass:draw()
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("line", self.position.x, self.position.y, self.size.x, self.size.y, 6, 6)
   end
-
-
-
-  -- debug
-  --love.graphics.print(tostring(self.state), self.position.x + 20, self.position.y - 20)
 end
 
 function CardClass:checkForMouseOver(grabber)

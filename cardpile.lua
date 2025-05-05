@@ -4,7 +4,7 @@ require "vector"
 
 CardPile = {}
 
-function CardPile:new(xPos, yPos, drawStack, stack)
+function CardPile:new(xPos, yPos, stack)
   local cardPile = {}
   local metadata = {__index = CardPile}
   setmetatable(cardPile, metadata)
@@ -12,15 +12,18 @@ function CardPile:new(xPos, yPos, drawStack, stack)
   cardPile.position = Vector(xPos, yPos)
   cardPile.size = Vector(50, 70)
   cardPile.interactSize = Vector(55, 75)
-  cardPile.drawStack = drawStack
   cardPile.stack = stack
   cardPile.cardTable = {}
 
   return cardPile
 end
 
+-- makes the bottom card face up if
+-- 1) it isn't empty
+-- 2) global cardtable is empty (so no card being grabbed)
+-- 3) if the bottom card isn't faced up
 function CardPile:update()
-  if not self.drawStack and #self.cardTable ~= 0 and self.cardTable[#self.cardTable].faceUp == false then
+  if #self.cardTable ~= 0 and #cardTable == 0 and self.cardTable[#self.cardTable].faceUp == false then
     self.cardTable[#self.cardTable].faceUp = true
   end
 end

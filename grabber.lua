@@ -21,6 +21,8 @@ function GrabberClass:new()
   -- offset of card's position compared to grabber
   grabber.offset = nil
 
+  grabber.previousCardPile = nil
+
   return grabber
 end
 
@@ -49,18 +51,15 @@ end
 
 function GrabberClass:grab()
   self.grabPos = self.currentMousePos
-  print("grabbing card")
 
   for _, cardPile in ipairs(cardPileTable) do
-    print("checking cardpile:" ..tostring(cardPile))
     for i, card in ipairs(cardPile.cardTable) do
-      print(card.state)
       if card.state == 1 and card.faceUp then
-        print("grabbing card")
         table.insert(cardTable, card)
         cardPile:removeCard(card)
         self.heldObject = card
         self.offset = card.position - self.grabPos
+        self.previousCardPile = cardPile
         self.heldObject.state = 2 -- object (card) is grabbed
       end
     end
@@ -75,9 +74,48 @@ function GrabberClass:release()
     return
   end
 
+  local validLocation = false
+  for _, cardPile in ipairs(cardPileTable) do
+    -- position check
+    if self:InValidPositionInValidPosition(cardPile) then
+    if #cardPile.cardTable == 0 then
+      cardPile:addCard(self.heldObject)
+      table.remove(cardTable, 1)
+      validLocation = true
+      break
+    elseif cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
+    cardPile.cardTable[#cardPile.cardTable].value == self.heldObject.value+1 then
+      cardPile:addCard(self.heldObject)
+      table.remove(cardTable, 1)
+      validLocation = true
+      break
+    end
+    end
+  end
+
+  if not validLocation then
+    self.heldObject:moveCard(self.grabPos.x + self.offset.x, self.grabPos.y + self.offset.y)
+    self.previousCardPile:addCard(self.heldObject)
+    table.remove(cardTable, 1)
+  end
+
+
 
   self.heldObject.state = nil
   self.heldObject = nil
   self.offset = nil
   self.grabPos = nil
+end
+
+function GrabberClass:InValidPosition(cardPile)
+  if self.currentMousePos.x > cardPile.position.x and
+  self.currentMousePos.x < cardPile.position.x + cardPile.interactSize.x and
+  self.currentMousePos.y > cardPile.position.y and
+  self.currentMousePos.y < cardPile.position.y + cardPile.interactSize.y then
+    return true
+  end
+  return false
+end
+
+function GrabberClass:IsValidStack(cardPile)
 end
