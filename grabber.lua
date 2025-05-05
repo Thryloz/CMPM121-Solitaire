@@ -76,20 +76,11 @@ function GrabberClass:release()
 
   local validLocation = false
   for _, cardPile in ipairs(cardPileTable) do
-    -- position check
-    if self:InValidPositionInValidPosition(cardPile) then
-    if #cardPile.cardTable == 0 then
+    if self:InValidPosition(cardPile) and self:IsValidStack(cardPile) then
       cardPile:addCard(self.heldObject)
       table.remove(cardTable, 1)
       validLocation = true
       break
-    elseif cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
-    cardPile.cardTable[#cardPile.cardTable].value == self.heldObject.value+1 then
-      cardPile:addCard(self.heldObject)
-      table.remove(cardTable, 1)
-      validLocation = true
-      break
-    end
     end
   end
 
@@ -118,4 +109,13 @@ function GrabberClass:InValidPosition(cardPile)
 end
 
 function GrabberClass:IsValidStack(cardPile)
+  -- if trying to place king in empty tableau pile
+  if #cardPile.cardTable == 0 and self.heldObject.value == 13 then
+    return true
+  -- if trying to place card in existing tableau pile
+  elseif cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
+  cardPile.cardTable[#cardPile.cardTable].value == self.heldObject.value+1 then
+    return true
+  end
+  return false
 end
