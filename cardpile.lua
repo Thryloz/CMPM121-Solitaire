@@ -20,7 +20,7 @@ end
 
 -- makes the bottom card face up if
 -- 1) it isn't empty
--- 2) global cardtable is empty (so no card being grabbed)
+-- 2) global cardtable is empty (so no cards being grabbed)
 -- 3) if the bottom card isn't faced up
 function CardPile:update()
   if #self.cardTable ~= 0 and #cardTable == 0 and self.cardTable[#self.cardTable].faceUp == false then
@@ -67,4 +67,15 @@ function CardPile:removeCard(card)
       break
     end
   end
+end
+
+function CardPile:GetCardIndex(card)
+  local count = 1
+  for _, ownCard in ipairs(self.cardTable) do
+    if card.value == ownCard.value and card.suite == ownCard.suite then
+      return count
+    end
+    count = count + 1
+  end
+  return nil
 end

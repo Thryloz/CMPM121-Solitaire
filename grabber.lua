@@ -55,19 +55,24 @@ function GrabberClass:grab()
   for _, cardPile in ipairs(cardPileTable) do
     for i, card in ipairs(cardPile.cardTable) do
       if card.state == 1 and card.faceUp then
-        table.insert(cardTable, card)
-        cardPile:removeCard(card)
+        for j = cardPile:GetCardIndex(card), #cardPile.cardTable, 1 do
+          print("card index: " ..j)
+          print("card last index: " ..#cardPile.cardTable)
+          table.insert(cardTable, cardPile.cardTable[j])
+          cardPile:removeCard(cardTable[#cardTable])
+        end
+
         self.heldObject = card
         self.offset = card.position - self.grabPos
         self.previousCardPile = cardPile
-        self.heldObject.state = 2 -- object (card) is grabbed
+        self.heldObject.state = 2
+        break
       end
     end
   end
 end
 
 function GrabberClass:release()
-  -- NEW: some more logic stubs here
   if self.heldObject == nil then -- we have nothing to release
       self.offset = nil
       self.grabPos = nil
@@ -90,8 +95,6 @@ function GrabberClass:release()
     table.remove(cardTable, 1)
   end
 
-
-
   self.heldObject.state = nil
   self.heldObject = nil
   self.offset = nil
@@ -110,7 +113,10 @@ end
 
 function GrabberClass:IsValidStack(cardPile)
   -- if trying to place king in empty tableau pile
-  if #cardPile.cardTable == 0 and self.heldObject.value == 13 then
+  if #cardPile.cardTable == 0 and cardPile.stack == false and self.heldObject.value == 13 then
+    return true
+  -- if trying to place A in foundation pile
+  elseif #cardPile.cardTable == 0 and cardPile.stack == true and self.heldObject.value == 1 then
     return true
   -- if trying to place card in existing tableau pile
   elseif cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
