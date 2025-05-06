@@ -156,14 +156,19 @@ function GrabberClass:IsValidStack(cardPile)
   if cardPile == self.previousCardPile then
     return true
   -- if trying to place king in empty tableau pile
-  elseif #cardPile.cardTable == 0 and cardPile.stack == false and self.heldObject.value == 13 then
-    return true
-  -- if trying to place A in foundation pile
-  elseif #cardPile.cardTable == 0 and cardPile.stack == true and self.heldObject.value == 1 then
+  elseif cardPile.stack == false and #cardPile.cardTable == 0 and self.heldObject.value == 13 then
     return true
   -- if trying to place card in existing tableau pile
   elseif cardPile.stack == false and cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
   cardPile.cardTable[#cardPile.cardTable].value == self.heldObject.value+1 then
+    return true
+  -- if trying to place A in foundation pile
+  elseif cardPile.stack == true and #cardPile.cardTable == 0 and self.heldObject.value == 1 then
+    return true
+  -- if trying to place in foundation pile
+  elseif cardPile.stack == true and #self.cardTable == 1 and
+  cardPile.cardTable[#cardPile.cardTable].value == self.heldObject.value-1 and
+  cardPile.cardTable[#cardPile.cardTable].suite == self.heldObject.suite then
     return true
   end
   return false
