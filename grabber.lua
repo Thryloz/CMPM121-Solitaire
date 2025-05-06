@@ -10,7 +10,6 @@ function GrabberClass:new()
   local metadata = {__index = GrabberClass}
   setmetatable(grabber, metadata)
 
-  grabber.previousMousePos = nil
   grabber.currentMousePos = nil
 
   grabber.grabPos = nil
@@ -43,11 +42,6 @@ function GrabberClass:update()
   if not love.mouse.isDown(1) and self.grabPos ~= nil then
     self:release()
   end
-
-  -- Move card if being held
-  -- if self.heldObject ~= nil then
-  --   self.heldObject:moveCard(self.currentMousePos.x + self.offset.x, self.currentMousePos.y + self.offset.y)
-  -- end
 end
 
 function GrabberClass:draw()
@@ -59,16 +53,23 @@ function GrabberClass:draw()
   end
 end
 
-
-
 function GrabberClass:grab()
   self.grabPos = self.currentMousePos
 
+  -- drawing from stock pile
+  if self.grabPos.x > stockPile.stockPilePosition.x and 
+  self.grabPos.x < stockPile.stockPilePosition.x + stockPile.interactSize.x and
+  self.grabPos.y > stockPile.stockPilePosition.y and
+  self.grabPos.y < stockPile.stockPilePosition.y + stockPile.interactSize.y then
+    stockPile:drawThree();
+  end
+
+  -- grabbing cards from tableau piles
   for _, cardPile in ipairs(cardPileTable) do
     for _, card in ipairs(cardPile.cardTable) do
       if card.state == 1 and card.faceUp then
         local pileSize = #cardPile.cardTable
-        
+
         for j = cardPile:GetCardIndex(card), pileSize, 1 do
           table.insert(self.cardTable, cardPile.cardTable[j])
         end
@@ -82,11 +83,12 @@ function GrabberClass:grab()
         self.previousCardPile = cardPile
         self.heldObject.state = 2
 
-
         break
       end
     end
   end
+
+  -- grabbing card from waste pile
 end
 
 function GrabberClass:release()
@@ -96,6 +98,7 @@ function GrabberClass:release()
     return
   end
 
+  -- if valid location, add all cards in grabber cardtable to pile and clears grabber cardpile
   local validLocation = false
   for _, cardPile in ipairs(cardPileTable) do
     if self:InValidPosition(cardPile) and self:IsValidStack(cardPile) then
@@ -106,6 +109,7 @@ function GrabberClass:release()
     end
   end
 
+  -- if not valid, add all cards in grabber cardtable to previous pile and clears grabber cardtable
   if not validLocation then
     for _, card in ipairs(self.cardTable) do self.previousCardPile:addCard(card) end
     for i, _ in ipairs(self.cardTable) do self.cardTable[i] = nil end
@@ -128,7 +132,7 @@ function GrabberClass:InValidPosition(cardPile)
 end
 
 function GrabberClass:IsValidStack(cardPile)
-  -- trying to place card back in old pile
+  -- if trying to place card back in old pile
   if cardPile == self.previousCardPile then
     return true
   -- if trying to place king in empty tableau pile

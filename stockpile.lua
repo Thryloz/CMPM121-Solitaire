@@ -22,12 +22,19 @@ function StockPile:draw()
     love.graphics.rectangle("fill", self.stockPilePosition.x, self.stockPilePosition.y, self.size.x, self.size.y, 6, 6)
     love.graphics.rectangle("fill", self.wastePilePosition.x , self.wastePilePosition.y, self.size.x, self.size.y, 6, 6)
 
-    for i, card in ipairs(self.stockTable) do
+    for _, card in ipairs(self.stockTable) do
+        card:moveCard(self.stockPilePosition.x, self.stockPilePosition.y)
+        card.faceUp = false
         card:draw()
     end
 
-    for j, card in ipairs(self.wasteTable) do
-        card:draw()
+    if #self.wasteTable ~= 0 then
+        for i = 0, 2, 1 do
+            local card = self.wasteTable[#self.wasteTable - i]
+            card:moveCard(self.wastePilePosition.x, self.wastePilePosition.y + (i*20))
+            card.faceUp = true
+            card:draw()
+        end
     end
 end
 
@@ -37,10 +44,15 @@ function StockPile:addCard(card)
 end
 
 function StockPile:drawThree()
+    -- if stock table is empty reset it
+    if #self.stockTable == 0 then
+        for _, card in ipairs(self.wasteTable) do table.insert(self.stockTable, card) end
+        for i, _ in ipairs(self.wasteTable) do self.wasteTable[i] = nil end
+        return
+    end
+  
     for i = 0, 2, 1 do
-        card = table.remove(self.stockTable, 1)
+        local card = table.remove(self.stockTable, 1)
         table.insert(self.wasteTable, card)
-        card:moveCard(self.wastePilePosition.x, self.wastePilePosition.y * (i*20))
-        card.faceUp = true
-    end 
+    end
 end
