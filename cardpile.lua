@@ -23,7 +23,7 @@ end
 -- 2) global cardtable is empty (so no cards being grabbed)
 -- 3) if the bottom card isn't faced up
 function CardPile:update()
-  if #self.cardTable ~= 0 and #cardTable == 0 and self.cardTable[#self.cardTable].faceUp == false then
+  if #self.cardTable ~= 0 and #grabber.cardTable == 0 and self.cardTable[#self.cardTable].faceUp == false then
     self.cardTable[#self.cardTable].faceUp = true
   end
 end
@@ -49,11 +49,6 @@ function CardPile:addCard(card)
   table.insert(self.cardTable, card)
   if not self.stack then
     self.interactSize = Vector(self.interactSize.x, self.interactSize.y + 20)
-  end
-
-  print("--------")
-  for _, j in ipairs(self.cardTable) do
-    print("card: " ..tostring(j.value))
   end
 end
 

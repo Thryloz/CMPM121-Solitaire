@@ -20,16 +20,16 @@ function CardClass:new(xPos, yPos, value, suite, faceUp)
   card.size = Vector(50, 70)
   card.value = value
   if (suite == "clubs") then
-    card.color = {0, 0, 0, 1}
+    card.color = "black"
     card.suite = love.graphics.newImage("Sprites/clubs.png")
   elseif (suite == "spades") then
-    card.color = {0, 0, 0, 1}
+    card.color = "black"
     card.suite = love.graphics.newImage("Sprites/spades.png")
   elseif (suite == "hearts") then
-    card.color = {1, 0, 0, 1}
+    card.color = "red"
     card.suite = love.graphics.newImage("Sprites/hearts.png")
   elseif (suite == "diamonds") then
-    card.color = {1, 0, 0, 1}
+    card.color = "red"
     card.suite = love.graphics.newImage("Sprites/diamonds.png")
   end
 
@@ -61,7 +61,12 @@ function CardClass:draw()
     love.graphics.rectangle("line", self.position.x, self.position.y, self.size.x, self.size.y, 6, 6)
  
     -- number and suite
-    love.graphics.setColor(self.color)
+    if self.color == "red" then
+      love.graphics.setColor({1, 0, 0, 1})
+    else
+      love.graphics.setColor({0, 0, 0, 1})
+    end
+
     if self.value == 1 then
       love.graphics.print(tostring("A"), self.position.x + 5, self.position.y + 5)
     elseif self.value == 11 then

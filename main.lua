@@ -72,7 +72,6 @@ function love.load()
   math.randomseed(os.time())
 
   grabber = GrabberClass:new()
-  cardTable = {}
   cardPileTable = {}
   stockPile = StockPile:new(50, 50)
 
@@ -126,24 +125,16 @@ function love.update()
     cardPile:update()
   end
 
-  for _, card in ipairs(cardTable) do
-    card:update()
-  end
 end
 
 function love.draw()
-
   stockPile:draw()
 
   for _, cardPile in ipairs(cardPileTable) do
     cardPile:draw()
   end
 
-  for _, card in ipairs(cardTable) do
-    card:draw()
-  end
-
-
+  grabber:draw()
 end
 
 function checkForMouseMoving()
@@ -155,12 +146,7 @@ function checkForMouseMoving()
     for j, card in ipairs(cardPile.cardTable) do
       card:checkForMouseOver(grabber)
     end
-  end
-
-  for _, card in ipairs(cardTable) do
-    card:checkForMouseOver(grabber)
-  end
-  
+  end  
 end
 
 -- https://love2d.org/forums/viewtopic.php?t=11623
@@ -171,7 +157,6 @@ local clickInterval = 0.2 -- seconds between to count as double click
 function love.mousepressed(x, y)
     local time = love.timer.getTime()
     if time <= lastclick + clickInterval then
-        print("double click")
         flipCard()
     else
         lastclick = time
@@ -185,13 +170,6 @@ function flipCard()
         card.faceUp = not card.faceUp
         return
       end
-    end
-  end
-  
-  for _, card in ipairs(cardTable) do
-    if card.state == 1 then
-      card.faceUp = not card.faceUp
-      return
     end
   end
 end

@@ -23,6 +23,8 @@ function GrabberClass:new()
 
   grabber.previousCardPile = nil
 
+  grabber.cardTable = {}
+
   return grabber
 end
 
@@ -48,6 +50,13 @@ function GrabberClass:update()
   end
 end
 
+function GrabberClass:draw()
+  for _, card in ipairs(self.cardTable) do
+    card:draw()
+  end
+end
+
+
 
 function GrabberClass:grab()
   self.grabPos = self.currentMousePos
@@ -55,17 +64,18 @@ function GrabberClass:grab()
   for _, cardPile in ipairs(cardPileTable) do
     for i, card in ipairs(cardPile.cardTable) do
       if card.state == 1 and card.faceUp then
-        for j = cardPile:GetCardIndex(card), #cardPile.cardTable, 1 do
-          print("card index: " ..j)
-          print("card last index: " ..#cardPile.cardTable)
-          table.insert(cardTable, cardPile.cardTable[j])
-          cardPile:removeCard(cardTable[#cardTable])
+        local pileSize = #cardPile.cardTable
+        --print(pileSize)
+        for j = cardPile:GetCardIndex(card), pileSize+1, 1 do
+          table.insert(self.cardTable, cardPile.cardTable[j])
+          cardPile:removeCard(self.cardTable[#self.cardTable])
         end
-
         self.heldObject = card
         self.offset = card.position - self.grabPos
         self.previousCardPile = cardPile
         self.heldObject.state = 2
+
+
         break
       end
     end
@@ -83,7 +93,7 @@ function GrabberClass:release()
   for _, cardPile in ipairs(cardPileTable) do
     if self:InValidPosition(cardPile) and self:IsValidStack(cardPile) then
       cardPile:addCard(self.heldObject)
-      table.remove(cardTable, 1)
+      table.remove(self.cardTable, 1)
       validLocation = true
       break
     end
@@ -92,7 +102,7 @@ function GrabberClass:release()
   if not validLocation then
     self.heldObject:moveCard(self.grabPos.x + self.offset.x, self.grabPos.y + self.offset.y)
     self.previousCardPile:addCard(self.heldObject)
-    table.remove(cardTable, 1)
+    table.remove(self.cardTable, 1)
   end
 
   self.heldObject.state = nil
@@ -112,14 +122,17 @@ function GrabberClass:InValidPosition(cardPile)
 end
 
 function GrabberClass:IsValidStack(cardPile)
+  -- trying to place card back in old pile
+  if cardPile == self.previousCardPile then
+    return true
   -- if trying to place king in empty tableau pile
-  if #cardPile.cardTable == 0 and cardPile.stack == false and self.heldObject.value == 13 then
+  elseif #cardPile.cardTable == 0 and cardPile.stack == false and self.heldObject.value == 13 then
     return true
   -- if trying to place A in foundation pile
   elseif #cardPile.cardTable == 0 and cardPile.stack == true and self.heldObject.value == 1 then
     return true
   -- if trying to place card in existing tableau pile
-  elseif cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
+  elseif cardPile.stack == false and cardPile.cardTable[#cardPile.cardTable].color ~= self.heldObject.color and
   cardPile.cardTable[#cardPile.cardTable].value == self.heldObject.value+1 then
     return true
   end
