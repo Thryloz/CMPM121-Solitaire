@@ -45,14 +45,17 @@ function GrabberClass:update()
   end
 
   -- Move card if being held
-  if self.heldObject ~= nil then
-    self.heldObject:moveCard(self.currentMousePos.x + self.offset.x, self.currentMousePos.y + self.offset.y)
-  end
+  -- if self.heldObject ~= nil then
+  --   self.heldObject:moveCard(self.currentMousePos.x + self.offset.x, self.currentMousePos.y + self.offset.y)
+  -- end
 end
 
 function GrabberClass:draw()
-  for _, card in ipairs(self.cardTable) do
-    card:draw()
+  if (#self.cardTable ~= 0) then
+    for i, card in ipairs(self.cardTable) do
+      card:moveCard(self.currentMousePos.x + self.offset.x, self.currentMousePos.y + self.offset.y + ((i-1) * 20))
+      card:draw()
+    end
   end
 end
 
@@ -62,14 +65,18 @@ function GrabberClass:grab()
   self.grabPos = self.currentMousePos
 
   for _, cardPile in ipairs(cardPileTable) do
-    for i, card in ipairs(cardPile.cardTable) do
+    for _, card in ipairs(cardPile.cardTable) do
       if card.state == 1 and card.faceUp then
         local pileSize = #cardPile.cardTable
-        --print(pileSize)
-        for j = cardPile:GetCardIndex(card), pileSize+1, 1 do
+        
+        for j = cardPile:GetCardIndex(card), pileSize, 1 do
           table.insert(self.cardTable, cardPile.cardTable[j])
-          cardPile:removeCard(self.cardTable[#self.cardTable])
         end
+
+        for _, selfCards in ipairs(self.cardTable) do
+          cardPile:removeCard(selfCards)
+        end
+
         self.heldObject = card
         self.offset = card.position - self.grabPos
         self.previousCardPile = cardPile
@@ -92,17 +99,16 @@ function GrabberClass:release()
   local validLocation = false
   for _, cardPile in ipairs(cardPileTable) do
     if self:InValidPosition(cardPile) and self:IsValidStack(cardPile) then
-      cardPile:addCard(self.heldObject)
-      table.remove(self.cardTable, 1)
+      for _, card in ipairs(self.cardTable) do cardPile:addCard(card) end
+      for i, _ in ipairs(self.cardTable) do self.cardTable[i] = nil end
       validLocation = true
       break
     end
   end
 
   if not validLocation then
-    self.heldObject:moveCard(self.grabPos.x + self.offset.x, self.grabPos.y + self.offset.y)
-    self.previousCardPile:addCard(self.heldObject)
-    table.remove(self.cardTable, 1)
+    for _, card in ipairs(self.cardTable) do self.previousCardPile:addCard(card) end
+    for i, _ in ipairs(self.cardTable) do self.cardTable[i] = nil end
   end
 
   self.heldObject.state = nil
