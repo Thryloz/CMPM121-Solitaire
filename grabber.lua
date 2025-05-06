@@ -56,12 +56,28 @@ end
 function GrabberClass:grab()
   self.grabPos = self.currentMousePos
 
-  -- drawing from stock pile
+  -- draw 3 from stock pile
   if self.grabPos.x > stockPile.stockPilePosition.x and 
   self.grabPos.x < stockPile.stockPilePosition.x + stockPile.interactSize.x and
   self.grabPos.y > stockPile.stockPilePosition.y and
   self.grabPos.y < stockPile.stockPilePosition.y + stockPile.interactSize.y then
     stockPile:drawThree();
+    return
+  end
+
+  -- grabbing cards from waste pile
+  local lastCardWastePile = stockPile.wasteTable[#stockPile.wasteTable]
+  if lastCardWastePile ~= nil and self.grabPos.x > lastCardWastePile.position.x and
+  self.grabPos.x < lastCardWastePile.position.x + lastCardWastePile.size.x and
+  self.grabPos.y > lastCardWastePile.position.y and
+  self.grabPos.y < lastCardWastePile.position.y + lastCardWastePile.size.y then
+    table.insert(self.cardTable, lastCardWastePile)
+    table.remove(stockPile.wasteTable, #stockPile.wasteTable)
+    self.heldObject = lastCardWastePile
+    self.offset = lastCardWastePile.position - self.grabPos
+    self.previousCardPile = stockPile.wasteTable
+    self.heldObject.state = 2
+    return
   end
 
   -- grabbing cards from tableau piles
@@ -87,8 +103,6 @@ function GrabberClass:grab()
       end
     end
   end
-
-  -- grabbing card from waste pile
 end
 
 function GrabberClass:release()
@@ -111,8 +125,14 @@ function GrabberClass:release()
 
   -- if not valid, add all cards in grabber cardtable to previous pile and clears grabber cardtable
   if not validLocation then
-    for _, card in ipairs(self.cardTable) do self.previousCardPile:addCard(card) end
-    for i, _ in ipairs(self.cardTable) do self.cardTable[i] = nil end
+    if self.previousCardPile ~= stockPile.wasteTable then
+      for _, card in ipairs(self.cardTable) do self.previousCardPile:addCard(card) end
+      for i, _ in ipairs(self.cardTable) do self.cardTable[i] = nil end
+    else
+      table.insert(stockPile.wasteTable, self.heldObject)
+      self.heldObject:moveCard(self.grabPos.x + self.offset.x, self.grabPos.y + self.offset.y)
+      self.cardTable[1] = nil
+    end
   end
 
   self.heldObject.state = nil

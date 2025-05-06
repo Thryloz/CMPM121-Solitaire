@@ -29,10 +29,7 @@ function StockPile:draw()
     end
 
     if #self.wasteTable ~= 0 then
-        for i = 0, 2, 1 do
-            local card = self.wasteTable[#self.wasteTable - i]
-            card:moveCard(self.wastePilePosition.x, self.wastePilePosition.y + (i*20))
-            card.faceUp = true
+        for _, card in ipairs(stockPile.wasteTable) do
             card:draw()
         end
     end
@@ -50,9 +47,11 @@ function StockPile:drawThree()
         for i, _ in ipairs(self.wasteTable) do self.wasteTable[i] = nil end
         return
     end
-  
+
     for i = 0, 2, 1 do
         local card = table.remove(self.stockTable, 1)
-        table.insert(self.wasteTable, card)
+        if card ~= nil then table.insert(self.wasteTable, card) end
+        card:moveCard(self.wastePilePosition.x, self.wastePilePosition.y + (i*20))
+        card.faceUp = true
     end
 end

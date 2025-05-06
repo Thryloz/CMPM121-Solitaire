@@ -142,11 +142,16 @@ function checkForMouseMoving()
     return
   end
 
-  for i, cardPile in ipairs(cardPileTable) do
-    for j, card in ipairs(cardPile.cardTable) do
+  for _, cardPile in ipairs(cardPileTable) do
+    for _, card in ipairs(cardPile.cardTable) do
       card:checkForMouseOver(grabber)
     end
-  end  
+  end
+
+  for _, card in ipairs(stockPile.wasteTable) do
+    card:checkForMouseOver(grabber)
+  end
+
 end
 
 -- https://love2d.org/forums/viewtopic.php?t=11623
