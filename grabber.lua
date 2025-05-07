@@ -84,14 +84,19 @@ function GrabberClass:grab()
   for _, cardPile in ipairs(cardPileTable) do
     for _, card in ipairs(cardPile.cardTable) do
       if card.state == 1 and card.faceUp then
-        local pileSize = #cardPile.cardTable
+        if cardPile.stack == true then
+          table.insert(self.cardTable, card)
+          cardPile:removeCard(card)
+        else
+          local pileSize = #cardPile.cardTable
 
-        for j = cardPile:GetCardIndex(card), pileSize, 1 do
-          table.insert(self.cardTable, cardPile.cardTable[j])
-        end
+          for j = cardPile:GetCardIndex(card), pileSize, 1 do
+            table.insert(self.cardTable, cardPile.cardTable[j])
+          end
 
-        for _, selfCards in ipairs(self.cardTable) do
-          cardPile:removeCard(selfCards)
+          for _, selfCards in ipairs(self.cardTable) do
+            cardPile:removeCard(selfCards)
+          end
         end
 
         self.heldObject = card

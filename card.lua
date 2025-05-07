@@ -21,16 +21,20 @@ function CardClass:new(xPos, yPos, value, suite, faceUp)
   card.value = value
   if (suite == "clubs") then
     card.color = "black"
-    card.suite = love.graphics.newImage("Sprites/clubs.png")
+    card.suite = "clubs"
+    card.suiteImage = love.graphics.newImage("Sprites/clubs.png")
   elseif (suite == "spades") then
     card.color = "black"
-    card.suite = love.graphics.newImage("Sprites/spades.png")
+    card.suite = "spades"
+    card.suiteImage = love.graphics.newImage("Sprites/spades.png")
   elseif (suite == "hearts") then
     card.color = "red"
-    card.suite = love.graphics.newImage("Sprites/hearts.png")
+    card.suite = "hearts"
+    card.suiteImage = love.graphics.newImage("Sprites/hearts.png")
   elseif (suite == "diamonds") then
     card.color = "red"
-    card.suite = love.graphics.newImage("Sprites/diamonds.png")
+    card.suite = "diamonds"
+    card.suiteImage = love.graphics.newImage("Sprites/diamonds.png")
   end
 
 
@@ -81,9 +85,9 @@ function CardClass:draw()
 
     -- drawing the 10 edge case
     if self.value ~= 10 then
-      love.graphics.draw(self.suite, self.position.x + 12.5, self.position.y + 6, 0, 0.1, 0.1)
+      love.graphics.draw(self.suiteImage, self.position.x + 12.5, self.position.y + 6, 0, 0.1, 0.1)
     else
-      love.graphics.draw(self.suite, self.position.x + 20, self.position.y + 6, 0, 0.1, 0.1)
+      love.graphics.draw(self.suiteImage, self.position.x + 20, self.position.y + 6, 0, 0.1, 0.1)
     end
 
   else
