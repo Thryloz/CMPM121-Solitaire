@@ -11,17 +11,10 @@ function GrabberClass:new()
   setmetatable(grabber, metadata)
 
   grabber.currentMousePos = nil
-
   grabber.grabPos = nil
-
-  -- NEW: we'll want to keep track of the object (ie. card) we're holding
   grabber.heldObject = nil
-
-  -- offset of card's position compared to grabber
   grabber.offset = nil
-
   grabber.previousCardPile = nil
-
   grabber.cardTable = {}
 
   return grabber
@@ -44,6 +37,7 @@ function GrabberClass:update()
   end
 end
 
+-- draw cards in grabber's hand
 function GrabberClass:draw()
   if (#self.cardTable ~= 0) then
     for i, card in ipairs(self.cardTable) do
@@ -80,14 +74,15 @@ function GrabberClass:grab()
     return
   end
 
-  -- grabbing cards from tableau piles
   for _, cardPile in ipairs(cardPileTable) do
     for _, card in ipairs(cardPile.cardTable) do
       if card.state == 1 and card.faceUp then
+        -- grabbing 1 card from foundation pile
         if cardPile.stack == true then
           table.insert(self.cardTable, card)
           cardPile:removeCard(card)
         else
+        -- grabbing cards from tableau piles
           local pileSize = #cardPile.cardTable
 
           for j = cardPile:GetCardIndex(card), pileSize, 1 do
@@ -103,7 +98,6 @@ function GrabberClass:grab()
         self.offset = card.position - self.grabPos
         self.previousCardPile = cardPile
         self.heldObject.state = 2
-
         break
       end
     end
@@ -146,6 +140,7 @@ function GrabberClass:release()
   self.grabPos = nil
 end
 
+-- helper function to see if mouse is in a valid cardpile location
 function GrabberClass:InValidPosition(cardPile)
   if self.currentMousePos.x > cardPile.position.x and
   self.currentMousePos.x < cardPile.position.x + cardPile.interactSize.x and
@@ -156,6 +151,7 @@ function GrabberClass:InValidPosition(cardPile)
   return false
 end
 
+-- helper function checking solitaire rules
 function GrabberClass:IsValidStack(cardPile)
   -- if trying to place card back in old pile
   if cardPile == self.previousCardPile then
