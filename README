@@ -1,6 +1,7 @@
 Patterns used: 
 Classes for obvious reasons and therefore constructors
-The cards have states
+Cards have states
+Helper methods
 
 Postmortem:
 I would add a "in pile" state to the cards.
@@ -8,5 +9,29 @@ Maybe write my own grabber class because having to pass in the piles and card ta
 Also didn't manage to fix the weird issue of the card sometimes being drawn on top of another even though it's order is correct.
 I would also have used that better method to shuffle cards he showed in class.
 
-
 Sprites were drawn by me using Krita, all assets were made by me.
+
+05-07-2025 Update
+Thanks to Ashton Gallistel and spaledence on discord (forgot to get their actual name) for helping with
+the code review.
+
+Postmortem:
+Much more polished compared the previous version. The main thing is realizing that I didn't 
+have to pass things into the grabber because they were global variables I could access anywhere,
+making everything much easier and cleaner to do.
+
+I decided to make the stock pile a separate class because I think the functionality is different
+enough to warrant it. 
+
+Except for main, I think the code for all the other files are pretty clean and well organized.
+main is kind of a mess, especially the win check condition and loading, but it gets the job done
+and I rather not touch it again.
+
+Interestingly, I didn't really do anything I said I would in the previous postmortem, but 
+the code is a lot better anyway.
+
+
+
+
+
+
