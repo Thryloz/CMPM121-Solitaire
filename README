@@ -1,7 +1,6 @@
 Patterns used: 
-Classes for obvious reasons and therefore constructors
-Cards have states
-Helper methods
+Classes to manage piles.
+Singleton for the grabber.
 
 Postmortem:
 I would add a "in pile" state to the cards.
